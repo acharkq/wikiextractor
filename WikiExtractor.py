@@ -3153,6 +3153,8 @@ def main():
         options.keepLinks = True
 
     options.expand_templates = args.no_templates
+    print(options.expand_templates)
+    exit()
     options.filter_disambig_pages = args.filter_disambig_pages
     options.keep_tables = args.keep_tables
 
