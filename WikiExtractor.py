@@ -2992,23 +2992,38 @@ def extract_process(opts, i, jobs_queue, output_queue):
 
     out = StringIO()                 # memory buffer
     
-    
+    pattern = '{{Infobox '
+    pattern_len = len(pattern)
+
     while True:
         job = jobs_queue.get()  # job is (id, title, page, page_num)
+
         if job:
             id, revid, title, page, page_num = job
-            try:
-                e = Extractor(*job[:4]) # (id, revid, title, page)
-                page = None              # free memory
-                e.extract(out)
-                text = out.getvalue()
-            except:
-                text = ''
-                logging.exception('Processing page: %s %s', id, title)
+            page = ''.join(page)
+            # infobox_iter = findBalanced(page, openDelim=['{{Infobox '], closeDelim=['}}\n']) #['{{Infobox '], ['}}'])
+            brace_iter = findBalanced(page, openDelim=['{{'], closeDelim=['}}']) #['{{Infobox '], ['}}'])
+            text = ''
+            for start, end in brace_iter:
+                if page[start: start+ pattern_len] == pattern:
+                    text += page[start: end] + '\n'
+            header = '<doc id="%s" url="%s" title="%s">\n' % (id, get_url(id), title)
+            footer = "\n</doc>\n"
+            text = header + text + footer
+            # a = input('c')
+            # exit()
+            # try:
+            #     e = Extractor(*job[:4]) # (id, revid, title, page)
+            #     page = None              # free memory
+            #     e.extract(out)
+            #     text = out.getvalue()
+            # except:
+            #     text = ''
+            #     logging.exception('Processing page: %s %s', id, title)
 
             output_queue.put((page_num, text))
-            out.truncate(0)
-            out.seek(0)
+            # out.truncate(0)
+            # out.seek(0)
         else:
             logging.debug('Quit extractor')
             break
@@ -3236,3 +3251,9 @@ def createLogger(quiet, debug):
 
 if __name__ == '__main__':
     main()
+
+'''
+python WikiExtractor.py -q --processes 6 -o /storage/zyliu/Data/wiki/extracted/ -b 100M /storage/zyliu/Data/wiki/enwiki-20190120-pages-articles-multistream.xml
+python WikiExtractor.py --templates /storage/zyliu/Data/wiki/templates/cheese.xml -q --processes 6 -o /storage/zyliu/Data/wiki/extracted/ -b 100M /storage/zyliu/Data/wiki/enwiki-20190120-pages-articles-multistream.xml
+python WikiExtractor.py  -q --processes 1 -o /storage/zyliu/Data/wiki/extracted/ -b 100M /storage/zyliu/Data/wiki/test.xml
+'''
