@@ -2992,8 +2992,10 @@ def extract_process(opts, i, jobs_queue, output_queue):
 
     out = StringIO()                 # memory buffer
     
-    pattern = '{{Infobox '
-    pattern_len = len(pattern)
+    pattern1 = '{{Infobox '
+    pattern2 = '{{nutritionalvalue'
+    pattern1_len = len(pattern1)
+    pattern2_len = len(pattern2)
 
     while True:
         job = jobs_queue.get()  # job is (id, title, page, page_num)
@@ -3005,8 +3007,12 @@ def extract_process(opts, i, jobs_queue, output_queue):
             brace_iter = findBalanced(page, openDelim=['{{'], closeDelim=['}}']) #['{{Infobox '], ['}}'])
             text = ''
             for start, end in brace_iter:
-                if page[start: start+ pattern_len] == pattern:
+                if page[start: start+ pattern1_len] == pattern1:
                     text += page[start: end] + '\n'
+                elif page[start:start+pattern2_len] == pattern2:
+                    text += '{{Infobox Nutritional Value\n' + page[start+pattern2_len:end] + '\n'
+                    print(text)
+                    a = input('\n\ninput For A CHECK')
             header = '<doc id="%s" url="%s" title="%s">\n' % (id, get_url(id), title)
             footer = "\n</doc>\n"
             text = header + text + footer
