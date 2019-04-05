@@ -3011,8 +3011,6 @@ def extract_process(opts, i, jobs_queue, output_queue):
                     text += page[start: end] + '\n'
                 elif page[start:start+pattern2_len] == pattern2:
                     text += '{{Infobox Nutritional Value\n' + page[start+pattern2_len:end] + '\n'
-                    print(text)
-                    a = input('\n\ninput For A CHECK')
             header = '<doc id="%s" url="%s" title="%s">\n' % (id, get_url(id), title)
             footer = "\n</doc>\n"
             text = header + text + footer
