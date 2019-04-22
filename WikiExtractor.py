@@ -2994,8 +2994,11 @@ def extract_process(opts, i, jobs_queue, output_queue):
     
     pattern1 = '{{Infobox '
     pattern2 = '{{nutritionalvalue'
+    # todo add the third pattern into ...
+    pattern3 = '{{nutritional value'
     pattern1_len = len(pattern1)
     pattern2_len = len(pattern2)
+    pattern3_len = len(pattern3)
 
     while True:
         job = jobs_queue.get()  # job is (id, title, page, page_num)
@@ -3011,6 +3014,8 @@ def extract_process(opts, i, jobs_queue, output_queue):
                     text += page[start: end] + '\n'
                 elif page[start:start+pattern2_len] == pattern2:
                     text += '{{Infobox Nutritional Value\n' + page[start+pattern2_len:end] + '\n'
+                elif page[start:start+pattern3_len] == pattern2:
+                    text += '{{Infobox Nutritional Value\n' + page[start+pattern3_len:end] + '\n'
             header = '<doc id="%s" url="%s" title="%s">\n' % (id, get_url(id), title)
             footer = "\n</doc>\n"
             text = header + text + footer
