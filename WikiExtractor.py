@@ -3057,8 +3057,8 @@ def extract_process(opts, i, jobs_queue, output_queue):
     common_pattern = '{{Infobox '
     common_pattern_len = len(common_pattern)
 
-    other_patterns = {'{{nutritionalvalue': '{{Infobox Nutritional Value\n',
-                      '{{nutritional value': '{{Infobox Nutritional Value\n', '{{营养值': '{{Infobox 营养值\n'}
+    other_patterns = {'{{nutritionalvalue': '{{Infobox Nutritional Value\n', '{{nutritional value': '{{Infobox Nutritional Value\n', 
+        '{{营养值': '{{Infobox 营养值\n', '{{infobox ': '{{Infobox '}
 
     while True:
         job = jobs_queue.get()  # job is (id, title, page, page_num)
