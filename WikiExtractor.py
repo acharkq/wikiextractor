@@ -226,6 +226,9 @@ g_page_articl_used_total = 0
 def keepPage(ns, catSet, page):
     global g_page_articl_total, g_page_total, g_page_articl_used_total
     g_page_total += 1
+    # 2019-07-05: keep the templates in wikipedia
+    if ns == '10':
+        return True
     if ns != '0':               # Aritcle
         return False
     # remove disambig pages if desired
@@ -3371,6 +3374,10 @@ if __name__ == '__main__':
 
 '''
 python WikiExtractor.py -q --processes 4 -o /home/liuzhiyuan/Data/wiki/zh_wiki/extracted_infobox/ -b 1000M /home/liuzhiyuan/Data/wiki/zh_wiki/zhwiki-latest-pages-articles-multistream.xml
+
+python WikiExtractor.py -q --processes 4 -o /home/liuzhiyuan/Data/wiki/en_wiki_0501/extracted_infobox/ -b 1000M /home/liuzhiyuan/Data/wiki/en_wiki_0501/enwiki-20190501-pages-articles-multistream.xml
+
 python WikiExtractor.py --templates /storage/zyliu/Data/wiki/templates/cheese.xml -q --processes 6 -o /storage/zyliu/Data/wiki/extracted/ -b 100M /storage/zyliu/Data/wiki/enwiki-20190120-pages-articles-multistream.xml
+
 python WikiExtractor.py  -q --processes 1 -o /storage/zyliu/Data/wiki/extracted/ -b 100M /storage/zyliu/Data/wiki/test.xml
 '''
